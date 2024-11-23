@@ -119,7 +119,7 @@ form input[type='text']
   outline: none;
 }
 
-form button[type='button'] {
+form button[type='submit'] {
   width: 100%;
   padding: 16px;
   border: none;

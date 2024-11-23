@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./FormSection.css"; // Import the CSS file
 
 const validate = (values) => {
@@ -32,6 +34,9 @@ const validate = (values) => {
 };
 
 function FormSection() {
+  const [submitError, setSubmitError] = useState("");
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -40,8 +45,15 @@ function FormSection() {
       password: "",
     },
     validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post('http://localhost:5000/signup', values);
+        if (response.status === 201) {
+          navigate('/login');
+        }
+      } catch (error) {
+        setSubmitError(error.response?.data?.message || 'Signup failed');
+      }
     },
   });
 
@@ -134,6 +146,9 @@ function FormSection() {
           >
             Sign Up
           </button>
+          {submitError && (
+            <div className="text-red-600 text-sm text-center">{submitError}</div>
+          )}
         </form>
 
         {/* Terms and Services */}
