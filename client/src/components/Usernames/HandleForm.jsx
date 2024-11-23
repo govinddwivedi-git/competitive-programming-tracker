@@ -1,24 +1,20 @@
 import React from "react";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import "./Handle.css"; // Import the CSS file
 
 const validate = (values) => {
   const errors = {};
-  if (!values.codechef) {
-    errors.codechef = "CodeChef Username cannot be empty";
-  } else if (values.codechef.length > 15) {
+  
+  if (values.codechef && values.codechef.length > 15) {
     errors.codechef = "Must be 15 characters or less";
   }
 
-  if (!values.codeforces) {
-    errors.codeforces = "Codeforces Username cannot be empty";
-  } else if (values.codeforces.length > 20) {
+  if (values.codeforces && values.codeforces.length > 20) {
     errors.codeforces = "Must be 20 characters or less";
   }
 
-  if (!values.leetcode) {
-    errors.leetcode = "LeetCode Username cannot be empty";
-  } else if (values.leetcode.length > 20) {
+  if (values.leetcode && values.leetcode.length > 20) {
     errors.leetcode = "Must be 20 characters or less";
   }
 
@@ -26,6 +22,8 @@ const validate = (values) => {
 };
 
 function HandleForm() {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       codechef: "",
@@ -34,7 +32,8 @@ function HandleForm() {
     },
     validate,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      // Save handles logic here if needed
+      navigate('/login'); // Navigate to login after handle submission
     },
   });
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import "./FormSection.css"; // Import the CSS file
 
 const validate = (values) => {
@@ -35,6 +36,7 @@ const validate = (values) => {
 
 function FormSection() {
   const [submitError, setSubmitError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -49,7 +51,7 @@ function FormSection() {
       try {
         const response = await axios.post('http://localhost:5000/signup', values);
         if (response.status === 201) {
-          navigate('/login');
+          navigate('/handle-form'); // Changed from /login to /handle-form
         }
       } catch (error) {
         setSubmitError(error.response?.data?.message || 'Signup failed');
@@ -122,9 +124,9 @@ function FormSection() {
           </div>
 
           {/* Password Field */}
-          <div>
+          <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               name="password"
               id="password"
@@ -132,6 +134,13 @@ function FormSection() {
               value={formik.values.password}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-black text-black text-3xl"
             />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-2xl"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
             {formik.errors.password ? (
               <div className="text-red-600 text-sm mt-1">
                 {formik.errors.password}
