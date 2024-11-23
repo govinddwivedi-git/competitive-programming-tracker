@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import "./Handle.css"; // Import the CSS file
 
 const validate = (values) => {
@@ -23,6 +24,7 @@ const validate = (values) => {
 
 function HandleForm() {
   const navigate = useNavigate();
+  const [submitError, setSubmitError] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -31,9 +33,26 @@ function HandleForm() {
       leetcode: "",
     },
     validate,
-    onSubmit: (values) => {
-      // Save handles logic here if needed
-      navigate('/login'); // Navigate to login after handle submission
+    onSubmit: async (values) => {
+      const email = localStorage.getItem('userEmail');
+      if (!email) {
+        setSubmitError('No email found. Please sign up again.');
+        return;
+      }
+
+      try {
+        const response = await axios.post('http://localhost:5000/save-handles', {
+          ...values,
+          email
+        });
+        
+        if (response.status === 201) {
+          localStorage.removeItem('userEmail'); // Clear the stored email
+          navigate('/login');
+        }
+      } catch (error) {
+        setSubmitError(error.response?.data?.message || 'Failed to save handles');
+      }
     },
   });
 
@@ -109,6 +128,11 @@ function HandleForm() {
             Submit
           </button>
         </form>
+
+        {/* Add error message display */}
+        {submitError && (
+          <div className="text-red-600 text-sm text-center mt-2">{submitError}</div>
+        )}
 
         {/* Terms and Services */}
         <p className="text-gray-600 text-xs mt-4 text-center">

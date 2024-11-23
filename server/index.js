@@ -70,6 +70,70 @@ app.post('/login', (req, res) => {
   );
 });
 
+// New endpoint to save coding handles
+app.post('/save-handles', (req, res) => {
+  const { email, codechef, codeforces, leetcode } = req.body;
+
+  // Start a transaction
+  db.beginTransaction((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Transaction error' });
+    }
+
+    // Insert into codechef table
+    if (codechef) {
+      db.query('INSERT INTO codechef (email, username) VALUES (?, ?)',
+        [email, codechef],
+        (err) => {
+          if (err) {
+            return db.rollback(() => {
+              res.status(500).json({ message: 'Error saving CodeChef handle' });
+            });
+          }
+        }
+      );
+    }
+
+    // Insert into codeforces table
+    if (codeforces) {
+      db.query('INSERT INTO codeforces (email, username) VALUES (?, ?)',
+        [email, codeforces],
+        (err) => {
+          if (err) {
+            return db.rollback(() => {
+              res.status(500).json({ message: 'Error saving Codeforces handle' });
+            });
+          }
+        }
+      );
+    }
+
+    // Insert into leetcode table
+    if (leetcode) {
+      db.query('INSERT INTO leetcode (email, username) VALUES (?, ?)',
+        [email, leetcode],
+        (err) => {
+          if (err) {
+            return db.rollback(() => {
+              res.status(500).json({ message: 'Error saving LeetCode handle' });
+            });
+          }
+        }
+      );
+    }
+
+    // Commit the transaction
+    db.commit((err) => {
+      if (err) {
+        return db.rollback(() => {
+          res.status(500).json({ message: 'Error committing transaction' });
+        });
+      }
+      res.status(201).json({ message: 'Handles saved successfully' });
+    });
+  });
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

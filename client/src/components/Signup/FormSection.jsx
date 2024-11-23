@@ -51,6 +51,7 @@ function FormSection() {
       try {
         const response = await axios.post('http://localhost:5000/signup', values);
         if (response.status === 201) {
+          localStorage.setItem('userEmail', values.email); // Store email
           navigate('/handle-form'); // Changed from /login to /handle-form
         }
       } catch (error) {
