@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link
 import Logo from '../../assets/logo.png';
 
 export default function Navbar() {
@@ -17,12 +17,14 @@ export default function Navbar() {
         <img src={Logo} alt="Logo" className="nav-logo-img" />
       </div>
       <div className="nav-links">
-        <a href="#dashboard" className="nav-link">Dashboard</a>
-        <a href="#progress" className="nav-link">Progress</a>
-        <a href="#profile" className="nav-link">Profile</a>
+        <Link to="/dashboard" className="nav-link">Dashboard</Link>
+        <Link to="/analysis" className="nav-link">View Analysis</Link> {/* Update this link */}
+        <Link to="/profile" className="nav-link">Profile</Link>
       </div>
       <div className="nav-user">
-        <span className="user-name">{user?.first_name} {user?.last_name}</span>
+        <span className="user-name">
+          {user?.first_name} {user?.last_name}
+        </span>
         <button onClick={handleLogout} className="logout-btn">
           Logout
         </button>
