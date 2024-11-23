@@ -1,0 +1,15 @@
+.placeholder-black::placeholder {
+  color: black;
+}
+
+.text-black {
+  color: black;
+}
+
+.text-lg {
+  font-size: 1.125rem; /* 18px */
+}
+
+.text-3xl {
+  font-size: 1.875rem; /* 30px */
+}
