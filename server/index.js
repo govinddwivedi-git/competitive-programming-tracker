@@ -134,6 +134,19 @@ app.post('/save-handles', (req, res) => {
   });
 });
 
+// Add new endpoint to get all codechef users
+app.get('/codechef-users', (req, res) => {
+  db.query(
+    'SELECT username FROM codechef ORDER BY username ASC',
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Database error' });
+      }
+      res.json({ users: result });
+    }
+  );
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -7,6 +7,7 @@ import VisualForcesWrapper from "./components/VisualForcesWrapper"; // Import th
 import bgImage from "./assets/images/bg-intro-desktop.png";
 import HandleForm from "./components/Usernames/HandleForm";
 import HandleText from "./components/Usernames/HandleText";
+import PlatformStatsPage from './components/Dashboard/PlatformStatsPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/analysis" element={<VisualForcesWrapper />} /> {/* Add this route */}
+        <Route path="/platform/:platform" element={<PlatformStatsPage />} />
         <Route
           path="/signup"
           element={
