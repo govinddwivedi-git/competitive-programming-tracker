@@ -147,6 +147,24 @@ app.get('/codechef-users', (req, res) => {
   );
 });
 
+// Add new endpoint to get codechef handle by email
+app.get('/user-codechef-handle/:email', (req, res) => {
+  const { email } = req.params;
+  db.query(
+    'SELECT username FROM codechef WHERE email = ?',
+    [email],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Database error' });
+      }
+      if (!result || result.length === 0) {
+        return res.status(200).json({ handle: null, message: 'No handle found' });
+      }
+      res.json({ handle: result[0].username });
+    }
+  );
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
