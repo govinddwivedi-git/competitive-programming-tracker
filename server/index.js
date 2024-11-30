@@ -88,7 +88,7 @@ app.post('/login', (req, res) => {
   );
 });
 
-// New endpoint to save coding handles
+// Update the save-handles endpoint to handle duplicate entries
 app.post('/save-handles', (req, res) => {
   const { email, codechef, codeforces, leetcode } = req.body;
 
@@ -98,56 +98,44 @@ app.post('/save-handles', (req, res) => {
       return res.status(500).json({ message: 'Transaction error' });
     }
 
-    // Insert into codechef table
-    if (codechef) {
-      db.query('INSERT INTO codechef (email, username) VALUES (?, ?)',
-        [email, codechef],
-        (err) => {
-          if (err) {
-            return db.rollback(() => {
-              res.status(500).json({ message: 'Error saving CodeChef handle' });
-            });
+    // Helper function for upsert operation
+    const upsertHandle = (table, email, username) => {
+      return new Promise((resolve, reject) => {
+        db.query(
+          `INSERT INTO ${table} (email, username) VALUES (?, ?) 
+           ON DUPLICATE KEY UPDATE username = ?`,
+          [email, username, username],
+          (err) => {
+            if (err) reject(err);
+            else resolve();
           }
-        }
-      );
-    }
+        );
+      });
+    };
 
-    // Insert into codeforces table
-    if (codeforces) {
-      db.query('INSERT INTO codeforces (email, username) VALUES (?, ?)',
-        [email, codeforces],
-        (err) => {
-          if (err) {
-            return db.rollback(() => {
-              res.status(500).json({ message: 'Error saving Codeforces handle' });
-            });
-          }
+    // Process each platform handle
+    Promise.all([
+      codechef ? upsertHandle('codechef', email, codechef) : Promise.resolve(),
+      codeforces ? upsertHandle('codeforces', email, codeforces) : Promise.resolve(),
+      leetcode ? upsertHandle('leetcode', email, leetcode) : Promise.resolve()
+    ])
+    .then(() => {
+      db.commit((err) => {
+        if (err) {
+          return db.rollback(() => {
+            res.status(500).json({ message: 'Error committing transaction' });
+          });
         }
-      );
-    }
-
-    // Insert into leetcode table
-    if (leetcode) {
-      db.query('INSERT INTO leetcode (email, username) VALUES (?, ?)',
-        [email, leetcode],
-        (err) => {
-          if (err) {
-            return db.rollback(() => {
-              res.status(500).json({ message: 'Error saving LeetCode handle' });
-            });
-          }
-        }
-      );
-    }
-
-    // Commit the transaction
-    db.commit((err) => {
-      if (err) {
-        return db.rollback(() => {
-          res.status(500).json({ message: 'Error committing transaction' });
+        res.status(201).json({ message: 'Handles saved successfully' });
+      });
+    })
+    .catch((err) => {
+      db.rollback(() => {
+        res.status(500).json({ 
+          message: 'Error saving handles', 
+          error: err.message 
         });
-      }
-      res.status(201).json({ message: 'Handles saved successfully' });
+      });
     });
   });
 });
@@ -204,6 +192,38 @@ app.get('/user-codeforces-handle/:email', (req, res) => {
   const { email } = req.params;
   db.query(
     'SELECT username FROM codeforces WHERE email = ?',
+    [email],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Database error' });
+      }
+      if (!result || result.length === 0) {
+        return res.status(200).json({ handle: null, message: 'No handle found' });
+      }
+      res.json({ handle: result[0].username });
+    }
+  );
+});
+
+// Add new endpoint to get all leetcode users
+app.get('/leetcode-users', (req, res) => {
+  db.query(
+    'SELECT username FROM leetcode ORDER BY username ASC',
+    (err, result) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Database error' });
+      }
+      res.json({ users: result });
+    }
+  );
+});
+
+// Add new endpoint to get leetcode handle by email
+app.get('/user-leetcode-handle/:email', (req, res) => {
+  const { email } = req.params;
+  db.query(
+    'SELECT username FROM leetcode WHERE email = ?',
     [email],
     (err, result) => {
       if (err) {

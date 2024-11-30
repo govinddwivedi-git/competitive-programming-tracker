@@ -24,7 +24,7 @@ function App() {
           path="/signup"
           element={
             <div
-              className="flex justify-center items-center h-screen p-5 bg-red-500 bg-cover bg-center text-center text-white"
+              className="flex justify-center items-center h-screen p-5 bg-red-400 bg-cover bg-center text-center text-white"
               style={{ backgroundImage: `url(${bgImage})` }}
             >
               <TextSection />
@@ -36,7 +36,7 @@ function App() {
           path="/handle-form"
           element={
             <div
-              className="flex justify-center items-center h-screen p-5 bg-pink-500 bg-cover bg-center text-center text-white"
+              className="flex justify-center items-center h-screen p-5 bg-pink-400 bg-cover bg-center text-center text-white"
               style={{ backgroundImage: `url(${bgImage})` }}
             >
               <HandleText />

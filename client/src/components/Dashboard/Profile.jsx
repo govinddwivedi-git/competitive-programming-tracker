@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
+import bgImage from '../../assets/images/bg-intro-desktop.png';
 
 export default function Profile() {
   const [codechefData, setCodechefData] = useState(null);
   const [codeforcesData, setCodeforcesData] = useState(null);
+  const [leetcodeData, setLeetcodeData] = useState(null);
   const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -49,6 +51,41 @@ export default function Profile() {
             });
           }
         }
+
+        // Add LeetCode data fetching
+        const leetcodeResponse = await axios.get(`http://localhost:5000/user-leetcode-handle/${user.email}`);
+        if (leetcodeResponse.data.handle) {
+          // Fetch user info, solved problems, and contest info in parallel
+          const [userInfo, solvedInfo, contestInfo] = await Promise.all([
+            fetch(`https://alfa-leetcode-api.onrender.com/${leetcodeResponse.data.handle}`).then(res => res.json()),
+            fetch(`https://alfa-leetcode-api.onrender.com/${leetcodeResponse.data.handle}/solved`).then(res => res.json()),
+            fetch(`https://alfa-leetcode-api.onrender.com/${leetcodeResponse.data.handle}/contest`).then(res => res.json())
+          ]);
+
+          setLeetcodeData({
+            name: leetcodeResponse.data.handle,
+            profile: userInfo.avatar,  // Add profile picture URL
+            ranking: userInfo.ranking,
+            currentRating: contestInfo.contestRating || 0,
+            contestsAttended: contestInfo.contestAttend || 0,
+            globalRank: contestInfo.contestGlobalRanking || 'N/A',
+            solvedQuestions: {
+              easy: solvedInfo.easySolved || 0,
+              medium: solvedInfo.mediumSolved || 0,
+              hard: solvedInfo.hardSolved || 0,
+              total: solvedInfo.solvedProblem || 0
+            },
+            totalQuestions: {
+              easy: solvedInfo.totalEasy || 0,
+              medium: solvedInfo.totalMedium || 0,
+              hard: solvedInfo.totalHard || 0,
+              total: solvedInfo.totalQuestions || 0
+            },
+            acceptanceRate: userInfo.acceptanceRate,
+            contributionPoints: userInfo.contributionPoints
+          });
+        }
+
       } catch (error) {
         console.error('Error:', error);
       } finally {
@@ -89,22 +126,25 @@ export default function Profile() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen" style={{ 
+      backgroundImage: `url(${bgImage})`,
+      backgroundColor: '#f5f5f5' 
+    }}>
       <Navbar />
       <div className="profile-container p-8">
-        <h1 className="text-3xl font-bold mb-6">Profile</h1>
+        <h1 className="text-5xl font-bold mb-8 text-center mt-8">Profile</h1>
         
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-2xl font-semibold mb-4">User Information</h2>
-          <div className="grid grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <h2 className="text-4xl font-semibold mb-6">User Information</h2>
+          <div className="grid grid-cols-2 gap-6 text-lg">
             <p><span className="font-semibold">Name:</span> {user?.first_name} {user?.last_name}</p>
             <p><span className="font-semibold">Email:</span> {user?.email}</p>
           </div>
         </div>
 
         {codechefData && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-4">CodeChef Statistics</h2>
+          <div className="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 className="text-3xl font-semibold mb-6">CodeChef Statistics</h2>
             <div className="flex items-center gap-4 mb-4">
               <img
                 src={codechefData.profile}
@@ -130,7 +170,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-6 text-lg">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-lg font-semibold mb-2">Ratings</h4>
                 <div className="space-y-2">
@@ -164,8 +204,8 @@ export default function Profile() {
         )}
 
         {codeforcesData && (
-          <div className="bg-white rounded-lg shadow p-6 mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Codeforces Statistics</h2>
+          <div className="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 className="text-3xl font-semibold mb-6">Codeforces Statistics</h2>
             <div className="flex items-center gap-4 mb-4">
               <img
                 src={codeforcesData.profile}
@@ -193,7 +233,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-6 text-lg">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="text-lg font-semibold mb-2">Ratings</h4>
                 <div className="space-y-2">
@@ -221,6 +261,54 @@ export default function Profile() {
                       <span>{codeforcesData.organization}</span>
                     </p>
                   )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {leetcodeData && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-3xl font-semibold mb-6">LeetCode Statistics</h2>
+            <div className="flex items-center gap-4 mb-4">
+              {leetcodeData.profile && (
+                <img
+                  src={leetcodeData.profile}
+                  alt="LeetCode Profile"
+                  className="w-16 h-16 rounded-full"
+                />
+              )}
+              <div>
+                <h3 className="text-xl font-semibold">{leetcodeData.name}</h3>
+                <a
+                  href={`https://leetcode.com/${leetcodeData.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  View Profile
+                </a>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 text-lg">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold mb-2">Problem Solving</h4>
+                <div className="space-y-2">
+                  <p><span className="font-medium">Easy:</span> <span className="text-green-600">{leetcodeData.solvedQuestions.easy}</span></p>
+                  <p><span className="font-medium">Medium:</span> <span className="text-yellow-600">{leetcodeData.solvedQuestions.medium}</span></p>
+                  <p><span className="font-medium">Hard:</span> <span className="text-red-600">{leetcodeData.solvedQuestions.hard}</span></p>
+                  <p><span className="font-medium">Total:</span> <span className="text-blue-600">{leetcodeData.solvedQuestions.total}</span></p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold mb-2">Contest Info</h4>
+                <div className="space-y-2">
+                  <p><span className="font-medium">Contest Rating:</span> <span className="text-purple-600">{leetcodeData.currentRating.toFixed(2)}</span></p>
+                  <p><span className="font-medium">Global Rank:</span> <span>{leetcodeData.globalRank}</span></p>
+                  <p><span className="font-medium">Contests Attended:</span> <span>{leetcodeData.contestsAttended}</span></p>
+                  <p><span className="font-medium">Acceptance Rate:</span> <span>{leetcodeData.acceptanceRate}%</span></p>
                 </div>
               </div>
             </div>
