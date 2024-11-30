@@ -15,6 +15,24 @@ const db = mysql.createConnection({
   database: 'dbms_project'
 });
 
+// Database connection check
+db.connect((err) => {
+  if (err) {
+    console.error('Error connecting to database:', err);
+    return;
+  }
+  console.log('Connected to MySQL database');
+  
+  // Check tables
+  db.query('SHOW TABLES', (err, results) => {
+    if (err) {
+      console.error('Error checking tables:', err);
+      return;
+    }
+    console.log('Available tables:', results);
+  });
+});
+
 // Signup endpoint
 app.post('/signup', async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -147,11 +165,45 @@ app.get('/codechef-users', (req, res) => {
   );
 });
 
-// Add new endpoint to get codechef handle by email
+// Add new endpoin t to get codechef handle by email
 app.get('/user-codechef-handle/:email', (req, res) => {
   const { email } = req.params;
   db.query(
     'SELECT username FROM codechef WHERE email = ?',
+    [email],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: 'Database error' });
+      }
+      if (!result || result.length === 0) {
+        return res.status(200).json({ handle: null, message: 'No handle found' });
+      }
+      res.json({ handle: result[0].username });
+    }
+  );
+});
+
+// Add new endpoint to get all codeforces users
+app.get('/codeforces-users', (req, res) => {
+  console.log('Received request for /codeforces-users');
+  db.query(
+    'SELECT username FROM codeforces ORDER BY username ASC',
+    (err, result) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Database error' });
+      }
+      console.log('Codeforces users found:', result);
+      res.json({ users: result });
+    }
+  );
+});
+
+// Add new endpoint to get codeforces handle by email
+app.get('/user-codeforces-handle/:email', (req, res) => {
+  const { email } = req.params;
+  db.query(
+    'SELECT username FROM codeforces WHERE email = ?',
     [email],
     (err, result) => {
       if (err) {
