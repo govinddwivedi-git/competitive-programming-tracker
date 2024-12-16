@@ -18,7 +18,7 @@ export default function Navbar() {
       </div>
       <div className="nav-links">
         <Link to="/dashboard" className="nav-link">Dashboard</Link>
-        <Link to="/analysis" className="nav-link">View Analysis</Link> {/* Update this link */}
+        <Link to="/analysis" className="nav-link">View Analysis</Link> 
         <Link to="/profile" className="nav-link">Profile</Link>
       </div>
       <div className="nav-user">

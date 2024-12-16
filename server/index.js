@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -8,11 +9,11 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  port: 3307,  // Added port specification
-  user: 'root',  // replace with your MySQL username
-  password: 'openroot',  // replace with your MySQL password
-  database: 'dbms_project'
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
 // Database connection check
@@ -237,7 +238,7 @@ app.get('/user-leetcode-handle/:email', (req, res) => {
   );
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
