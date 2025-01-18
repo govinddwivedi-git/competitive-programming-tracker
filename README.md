@@ -83,6 +83,32 @@ To use the platform, you'll need to set up API keys for:
 
 Add these keys to your backend .env file.
 
+## Project Screenshots
+
+| ![Screenshot 1](./screenshots/Screenshot%20(2185).png) | ![Screenshot 2](./screenshots/Screenshot%20(2186).png) |
+|---|---|
+| Sign Up Form | Login Form |
+
+| ![Screenshot 3](./screenshots/Screenshot%20(2188).png) | ![Screenshot 4](./screenshots/Screenshot%20(2189).png) |
+|---|---|
+| Dashboard | Analysis of Codeforces |
+
+| ![Sreenshot 4](./screenshots/Screenshot%20(2190).png) | ![Step 2](./screenshots/Screenshot%20(2191).png) |
+|---|---|
+| Analysis of Codeforces | Analysis of Codeforces |
+
+| ![Screenshot 3](./screenshots/Screenshot%20(2192).png) | ![Screenshot 4](./screenshots/Screenshot%20(2193).png) |
+|---|---|
+| Analysis of Codeforces | Analysis of Codeforces |
+
+| ![Screenshot 3](./screenshots/Screenshot%20(2195).png) | ![Screenshot 4](./screenshots/Screenshot%20(2197).png) |
+|---|---|
+| Codechef Statistics | Codeforces Statistics |
+
+| ![Screenshot 3](./screenshots/Screenshot%20(2203).png) | ![Screenshot 4](./screenshots/Screenshot%20(2204).png) |
+|---|---|
+| Leetcode Statistics | User Profile |
+
 ## Contributing
 
 1. Fork the repository
