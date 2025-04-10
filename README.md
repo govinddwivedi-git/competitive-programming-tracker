@@ -40,29 +40,41 @@ A comprehensive platform for tracking and analyzing competitive programming perf
 
 ## Project Screenshots
 
-| ![Screenshot 1](./screenshots/Screenshot%20(2185).png) | ![Screenshot 2](./screenshots/Screenshot%20(2186).png) |
-|---|---|
-| Sign Up Form | Login Form |
+![Screenshot 1](./screenshots/Screenshot%20(2185).png)
+*Sign Up Form*
 
-| ![Screenshot 3](./screenshots/Screenshot%20(2188).png) | ![Screenshot 4](./screenshots/Screenshot%20(2189).png) |
-|---|---|
-| Dashboard | Analysis of Codeforces |
+![Screenshot 2](./screenshots/Screenshot%20(2186).png)
+*Login Form*
 
-| ![Sreenshot 4](./screenshots/Screenshot%20(2190).png) | ![Step 2](./screenshots/Screenshot%20(2191).png) |
-|---|---|
-| Analysis of Codeforces | Analysis of Codeforces |
+![Screenshot 3](./screenshots/Screenshot%20(2188).png)
+*Dashboard*
 
-| ![Screenshot 3](./screenshots/Screenshot%20(2192).png) | ![Screenshot 4](./screenshots/Screenshot%20(2193).png) |
-|---|---|
-| Analysis of Codeforces | Analysis of Codeforces |
+![Screenshot 4](./screenshots/Screenshot%20(2189).png)
+*Analysis of Codeforces*
 
-| ![Screenshot 3](./screenshots/Screenshot%20(2195).png) | ![Screenshot 4](./screenshots/Screenshot%20(2196).png) |
-|---|---|
-| Codechef Statistics | Codeforces Statistics |
+![Screenshot 5](./screenshots/Screenshot%20(2190).png)
+*Analysis of Codeforces*
 
-| ![Screenshot 3](./screenshots/Screenshot%20(2203).png) | ![Screenshot 4](./screenshots/Screenshot%20(2204).png) |
-|---|---|
-| Leetcode Statistics | User Profile |
+![Screenshot 6](./screenshots/Screenshot%20(2191).png)
+*Analysis of Codeforces*
+
+![Screenshot 7](./screenshots/Screenshot%20(2192).png)
+*Analysis of Codeforces*
+
+![Screenshot 8](./screenshots/Screenshot%20(2193).png)
+*Analysis of Codeforces*
+
+![Screenshot 9](./screenshots/Screenshot%20(2195).png)
+*Codechef Statistics*
+
+![Screenshot 10](./screenshots/Screenshot%20(2196).png)
+*Codeforces Statistics*
+
+![Screenshot 11](./screenshots/Screenshot%20(2203).png)
+*Leetcode Statistics*
+
+![Screenshot 12](./screenshots/Screenshot%20(2204).png)
+*User Profile*
 
 ## Setup and Installation
 
